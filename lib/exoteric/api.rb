@@ -27,7 +27,10 @@ module Exoteric
         counter   = Counter.new(params)
         @count    = counter.count(*networks)
 
-        erb :script
+        erb <<-SCRIPT
+var Exoteric={c:<%= @count.to_json %>, count: function(sn){return this.c[sn] || 0;}};
+<% unless @callback.empty? %><%= @callback %>();<% end %>
+SCRIPT
       rescue => e
         status 500
         return { :error => e.to_s }.to_json
@@ -36,9 +39,3 @@ module Exoteric
 
   end
 end
-
-__END__
-
-@@ script
-var Exoteric={c:<%= @count.to_json %>, count: function(sn){return this.c[sn] || 0;}};
-<% unless @callback.empty? %><%= @callback %>();<% end %>
