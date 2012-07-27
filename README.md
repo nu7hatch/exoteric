@@ -1,6 +1,6 @@
 # Exoteric
 
-Exoteric gives you statistics from the most popular social networks, i.a.
+Exoteric gives you page statistics from the most popular social networks, i.a.
 number of tweets, how many people shared link on facebook or google plus
 etc. 
 

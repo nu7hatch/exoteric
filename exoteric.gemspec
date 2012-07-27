@@ -21,8 +21,10 @@ DESCR
 
   gem.add_dependency 'rest-client'
   gem.add_dependency 'json'
+  gem.add_dependency 'rack'
 
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'mocha'
+  gem.add_development_dependency 'rack-test'
 end

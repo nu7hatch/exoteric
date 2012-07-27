@@ -16,7 +16,7 @@ module Exoteric
     
     def initialize(options = {})
       @url, @options = options[:url], options
-      raise ArgumentError, "No :url option specified" if @url.to_s.empty?
+      raise ArgumentError, "Site url not specified" if @url.to_s.empty?
     end
 
     def count(*counters)
