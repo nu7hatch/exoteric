@@ -4,17 +4,23 @@ require 'exoteric/counter'
 module Exoteric
   class API < Sinatra::Application
 
+    SCRIPT_TPL = <<-JS
+var Exoteric={c:<%= @count.to_json %>, count: function(sn){return this.c[sn] || 0;}};
+<% unless @callback.empty? %><%= @callback %>();<% end %>
+JS
+
     get "/count.json" do
       content_type "application/json"
 
       begin
         networks = (params[:n] || '').split(',')
         counter  = Counter.new(params)
-        
-        counter.count(*networks).to_json
+        @count   = counter.count(*networks)
+
+        @count.to_json
       rescue => e
         status 500
-        return { :error => e.to_s }.to_json
+        { :error => e.to_s }.to_json
       end
     end
 
@@ -27,13 +33,10 @@ module Exoteric
         counter   = Counter.new(params)
         @count    = counter.count(*networks)
 
-        erb <<-SCRIPT
-var Exoteric={c:<%= @count.to_json %>, count: function(sn){return this.c[sn] || 0;}};
-<% unless @callback.empty? %><%= @callback %>();<% end %>
-SCRIPT
+        erb SCRIPT_TPL
       rescue => e
         status 500
-        return { :error => e.to_s }.to_json
+        { :error => e.to_s }.to_json
       end
     end
 
