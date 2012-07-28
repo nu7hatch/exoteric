@@ -8,3 +8,8 @@ end
 
 task :test => :spec
 task :default => :test
+
+desc "Run benchmarks"
+task :benchmark do
+  load File.expand_path("../spec/counters_benchmark.rb", __FILE__)
+end
