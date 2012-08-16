@@ -42,7 +42,7 @@ module Exoteric
     rescue Timeout::Error
       # nothing to do...
     ensure
-      return res
+      return res.clone
     end
   end
 end
