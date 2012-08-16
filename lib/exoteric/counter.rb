@@ -1,5 +1,7 @@
 require 'json'
 require 'rest_client'
+require 'thread'
+require 'timeout'
 
 module Exoteric
   class Counter
@@ -23,11 +25,24 @@ module Exoteric
       if counters.size == 0 || counters.first == :all
         counters = self.class.counters
       end
+      
+      res = {}
+      sem = Mutex.new
+      threads = []
 
-      counters.inject({}) do |res, name|
-        res[name] = send("#{name}_count")
-        res
+      counters.each do |name|
+        threads << Thread.new do 
+          sem.synchronize { res[name] = send("#{name}_count") }
+        end
       end
+
+      Timeout.timeout(10) do
+        threads.each(&:join)
+      end
+    rescue Timeout::Error
+      # nothing to do...
+    ensure
+      return res
     end
   end
 end
