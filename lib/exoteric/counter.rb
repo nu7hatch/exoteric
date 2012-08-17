@@ -32,7 +32,8 @@ module Exoteric
 
       counters.each do |name|
         threads << Thread.new do 
-          sem.synchronize { res[name] = send("#{name}_count") }
+          c = send("#{name}_count") 
+          sem.synchronize { res[name] = c }
         end
       end
 
